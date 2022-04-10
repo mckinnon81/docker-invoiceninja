@@ -1,0 +1,19 @@
+version: '3'
+services:
+  app:
+    image: '81bc1a4228ad01'
+    container_name: invoiceninja
+    ports:
+      - '8880:80'
+    environment:
+      - DB_HOST=192.168.50.104
+      - DB_USER=ninja
+      - DB_PASS=ninja
+      - DB_DATABASE=ninja
+      - APP_URL=http://inv.comprofix.xyz
+      - PROTOCOL=http
+      - IN_USER_EMAIL=mmckinnon@comprofix.com
+      - IN_PASSWORD=password
+    volumes:
+      - ./storage:/var/www/html/public/storage
+    restart: unless-stopped
