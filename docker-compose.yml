@@ -3,9 +3,9 @@ services:
   app:
     image: comprofix/invoiceninja:latest
 
-    ######################################################
-    # Remove or uncomment below if using external database.
-    ######################################################
+######################################################
+# Remove or uncomment if using external database.
+######################################################
     depends_on:
       database:
         condition: service_healthy
@@ -13,7 +13,7 @@ services:
       - database:mariadb
     networks:
       - invninja
-    ######################################################
+######################################################
 
     ports:
       - 8880:80
@@ -22,15 +22,15 @@ services:
       - DB_USER=ninja
       - DB_PASS=ninja
       - DB_DATABASE=ninja
-      - APP_URL=http://inv.comprofix.xyz
+      - APP_URL=http://invoiceninja.site
       - PROTOCOL=http
-      - IN_USER_EMAIL=mmckinnon@comprofix.com
+      - IN_USER_EMAIL=user@emai.com
       - IN_PASSWORD=password
     restart: unless-stopped
 
-  ######################################################
-  # Remove or uncomment below if using external database.
-  ######################################################
+######################################################
+# Remove or uncomment if using external database.
+######################################################
   database:
     image: mariadb:latest
     environment:
@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
     ports:
       - 3306:3306
-    
+
     healthcheck:
       test: mysql ninja --user=ninja --password=ninja --silent --execute "SELECT 1;"
       timeout: 1m30s
