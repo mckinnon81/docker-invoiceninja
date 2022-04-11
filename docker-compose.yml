@@ -1,12 +1,16 @@
 version: '3'
 services:
   app:
-    image: '81bc1a4228ad01'
-    container_name: invoiceninja
+    image: comprofix/invoiceninja:latest
+    depends_on:
+      database:
+        condition: service_healthy
+    links:
+      - database:mariadb
     ports:
-      - '8880:80'
+      - 8880:80
     environment:
-      - DB_HOST=192.168.50.104
+      - DB_HOST=mariadb
       - DB_USER=ninja
       - DB_PASS=ninja
       - DB_DATABASE=ninja
@@ -14,6 +18,28 @@ services:
       - PROTOCOL=http
       - IN_USER_EMAIL=mmckinnon@comprofix.com
       - IN_PASSWORD=password
-    volumes:
-      - ./storage:/var/www/html/public/storage
     restart: unless-stopped
+    networks:
+      - invninja
+
+  database:
+    image: mariadb:latest
+    environment:
+      - MARIADB_ROOT_PASSWORD=ninja
+      - MARIADB_DATABASE=ninja
+      - MARIADB_USER=ninja
+      - MARIADB_PASSWORD=ninja
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: mysql ninja --user=ninja --password=ninja --silent --execute "SELECT 1;"
+      timeout: 1m30s
+      interval: 20s
+      retries: 10
+    networks:
+      - invninja
+    restart: unless-stopped
+
+networks:
+  invninja:

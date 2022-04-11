@@ -20,15 +20,15 @@ RUN echo "**** install packages ****" && \
       "https://github.com/invoiceninja/invoiceninja/releases/download/${INVOICEINNJA_RELEASE}/invoiceninja.zip" && \
     mkdir -p /var/www/html/ && \
     unzip -q -o /tmp/invoiceninja.zip -d /var/www/html && \
-    chown -R nginx:nginx /var/www/html && \
-    chmod -R g+s /var/www/html && \
-    chmod -R 775 /var/www/html/storage && \
     rm /tmp/invoiceninja.zip
 
 COPY root/ /
 
 WORKDIR /var/www/html
-RUN composer install
+RUN composer install --no-dev
+RUN chown -R nginx:nginx /var/www/html && \
+    chmod -R g+s /var/www/html && \
+    chmod -R 775 /var/www/html/storage
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["/start.sh"]

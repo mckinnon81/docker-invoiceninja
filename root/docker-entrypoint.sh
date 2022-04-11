@@ -43,8 +43,8 @@ if [ "${DB_USER}" ];
     sed -i "s/DB_PASSWORD=ninja/DB_PASSWORD=${ESCAPED_PASSWORD}/g" /var/www/html/.env
 fi
 
+php artisan optimize
 php artisan migrate --force
-
 
 # If first IN run, it needs to be initialized
 IN_INIT=$(php artisan tinker --execute='echo Schema::hasTable("accounts") && !App\Models\Account::all()->first();')
@@ -64,11 +64,11 @@ if [ "$IN_INIT" == "1" ]; then
 
 fi
 
-#Fix permissions
-echo "Fixing permissions - This could take a minute"
-chown -R nginx:nginx /var/www/html
-chmod -R g+s /var/www/html
-chmod -R 775 /var/www/html/storage
+#Fix Permissions
+echo "Fix Permissions"
+chown -R nginx:nginx /var/www/html/storage/
+chmod -R 775 /var/www/html/storage/
+
 
 echo "Invoice Ninja ready"
 exec "$@"
