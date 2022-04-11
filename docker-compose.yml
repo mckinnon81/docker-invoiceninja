@@ -2,11 +2,19 @@ version: '3'
 services:
   app:
     image: comprofix/invoiceninja:latest
+
+    ######################################################
+    # Remove or uncomment below if using external database.
+    ######################################################
     depends_on:
       database:
         condition: service_healthy
     links:
       - database:mariadb
+    networks:
+      - invninja
+    ######################################################
+
     ports:
       - 8880:80
     environment:
@@ -19,9 +27,10 @@ services:
       - IN_USER_EMAIL=mmckinnon@comprofix.com
       - IN_PASSWORD=password
     restart: unless-stopped
-    networks:
-      - invninja
 
+  ######################################################
+  # Remove or uncomment below if using external database.
+  ######################################################
   database:
     image: mariadb:latest
     environment:
@@ -32,6 +41,7 @@ services:
     restart: unless-stopped
     ports:
       - 3306:3306
+    
     healthcheck:
       test: mysql ninja --user=ninja --password=ninja --silent --execute "SELECT 1;"
       timeout: 1m30s
@@ -39,7 +49,7 @@ services:
       retries: 10
     networks:
       - invninja
-    restart: unless-stopped
 
 networks:
   invninja:
+######################################################
